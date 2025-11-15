@@ -1,0 +1,14 @@
+# templates/job_postings/add_expert_by_email.html
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Add Expert by Email for "{{ job_posting.title }}"</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="candidate_email">Candidate Email:</label>
+            <input type="email" name="candidate_email" id="candidate_email" class="form-control" required class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Invite as Expert</button>
+        <a href="{% url 'job_postings:company_dashboard' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}
