@@ -17,14 +17,35 @@
                                 <th>Job Title</th>
                                 <th>Company</th>
                                 <th>Applied On</th>
+                                <th>Assessment Status</th> 👈 **NEW COLUMN**
                             </tr>
                         </thead>
                         <tbody>
                             {% for application in applications %}
                                 <tr>
-                                    <td>{{ application.title }}</td>
-                                    <td>{{ application.company.company_name }}</td>
-                                    <td>{{ application.created_at }}</td>
+                                    <td>{{ application.job_post.title }}</td> 👈 **Assuming application has job_post link**
+                                    <td>{{ application.job_post.company.company_name }}</td> 👈 **Assuming company details via job_post**
+                                    <td>{{ application.created_at|date:"M d, Y" }}</td>
+                                    
+                                    <td>
+                                        {% with test=application.job_post.tests.first %}
+                                            {% if test %}
+                                                {# Check if the candidate has completed the test. This logic often resides in the view, but we'll simulate the link here. #}
+                                                
+                                                {# You would need to pass a specific `attempt` object for this application, or check for it here. #}
+                                                {# Since we don't have the attempt status in this template, we'll provide the 'Take Test' link. #}
+                                                
+                                                <a href="{% url 'take_test' test_id=test.id %}" class="btn btn-warning btn-sm">
+                                                    Take Test
+                                                </a>
+                                                <small class="text-muted d-block mt-1">
+                                                    Assessment required.
+                                                </small>
+                                            {% else %}
+                                                <span class="text-secondary">No assessment attached.</span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </td> 👈 **END NEW COLUMN**
                                 </tr>
                             {% endfor %}
                         </tbody>

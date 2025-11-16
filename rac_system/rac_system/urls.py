@@ -23,4 +23,5 @@ urlpatterns = [
     path('', include('authentication_usertype.urls')),
     path('', include('company_dashboard.urls')),
     path('', include('candidate_dashboard.urls')),
+    path('assessment/', include('candidate_test.urls')),
 ]

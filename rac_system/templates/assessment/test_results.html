@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Results</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #e9eef7; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        h1 { color: #004d99; border-bottom: 3px solid #004d99; padding-bottom: 15px; margin-bottom: 25px; }
+        .summary-card { 
+            display: flex; justify-content: space-around; background-color: #f0f7ff; 
+            padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #d0e7ff;
+        }
+        .summary-item { text-align: center; }
+        .summary-item strong { display: block; font-size: 2em; color: #004d99; }
+        .summary-item span { font-size: 0.9em; color: #666; }
+        
+        .question-review-card { padding: 15px; margin-bottom: 15px; border-radius: 8px; }
+        .correct { background-color: #e6ffe6; border-left: 5px solid #00cc66; }
+        .incorrect { background-color: #ffe6e6; border-left: 5px solid #cc0000; }
+        .unanswered { background-color: #ffffcc; border-left: 5px solid #ffcc00; }
+        
+        .review-text { font-weight: bold; margin-bottom: 10px; font-size: 1.1em; }
+        .choice-item { padding: 5px 10px; margin: 3px 0; border-radius: 4px; }
+        .selected-answer { background-color: #d0e7ff; font-weight: bold; }
+        .correct-answer { background-color: #90ee90; font-weight: bold; border: 1px solid #00cc66; }
+        
+        .back-link { display: inline-block; margin-top: 30px; text-decoration: none; color: #004d99; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Test Results: {{ attempt.test.title }}</h1>
+    
+    <div class="summary-card">
+        <div class="summary-item">
+            <span>Score Earned</span>
+            <strong>{{ attempt.score }}</strong>
+            <span>out of {{ total_possible_score }} points</span>
+        </div>
+        <div class="summary-item">
+            <span>Completion Time</span>
+            <strong>{{ attempt.end_time|date:"H:i" }}</strong>
+            <span>on {{ attempt.end_time|date:"M d, Y" }}</span>
+        </div>
+        <div class="summary-item">
+            <span>Percentage</span>
+            <strong>{{ score_percentage|floatformat:1 }}%</strong>
+            <span>performance</span>
+        </div>
+    </div>
+    
+    <h2>Answer Review</h2>
+    
+    {% for answer in answers %}
+        {% with q=answer.question %}
+        {% if answer.is_correct %}
+            <div class="question-review-card correct">
+                <p class="review-text">✅ Question {{ forloop.counter }}: {{ q.text }}</p>
+                <p>Status: <span style="color: #00cc66;">Correct! (+{{ q.points }} points)</span></p>
+        {% elif answer.selected_choice %}
+            <div class="question-review-card incorrect">
+                <p class="review-text">❌ Question {{ forloop.counter }}: {{ q.text }}</p>
+                <p>Status: <span style="color: #cc0000;">Incorrect.</span></p>
+        {% else %}
+            <div class="question-review-card unanswered">
+                <p class="review-text">⚠️ Question {{ forloop.counter }}: {{ q.text }}</p>
+                <p>Status: <span style="color: #ffcc00;">Unanswered.</span></p>
+        {% endif %}
+                
+            <div style="margin-top: 10px;">
+                <!-- Display all choices and highlight selected/correct ones -->
+                {% for choice in q.choices.all %}
+                    <div class="choice-item 
+                        {% if choice.is_correct %}correct-answer{% endif %}
+                        {% if choice == answer.selected_choice and not choice.is_correct %}selected-answer{% endif %}
+                        {% if choice == answer.selected_choice and choice.is_correct %}selected-answer{% endif %}
+                    ">
+                        {{ choice.text }}
+                    </div>
+                {% endfor %}
+            </div>
+            </div>
+        {% endwith %}
+    {% endfor %}
+
+    <a href="{% url 'home' %}" class="back-link">← Return to Dashboard</a> 
+    
+</div>
+
+</body>
+</html>

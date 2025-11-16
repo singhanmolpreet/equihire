@@ -13,18 +13,19 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from . info import *
 
+AUTH_USER_MODEL = 'authentication_usertype.CustomUser'
 SECRET_KEY = 'django-insecure-j!je2a)!d30%y+zqfdxg8)ssf*q+-_#&ugbwsf(c3ig9vn6kln'
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMCORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent
 # load .env
 load_dotenv(BASE_DIR.parent / '.env')
 
@@ -37,12 +38,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_PORT=587
-EMAIL_HOST_USER='anmolwritesblog@gmail.com'
-EMAIL_HOST_PASSWORD='sjkb osmp iezs wmak'
-EMAIL_USE_TLS=True
-DEFAULT_FROM_EMAIL='anmolwritesblog@gmail.com'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
 
 # DRF + JWT
 REST_FRAMEWORK = {
@@ -88,6 +89,7 @@ INSTALLED_APPS = [
     'authentication_usertype',
     'company_dashboard',
     'candidate_dashboard',
+    'candidate_test',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,132 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Test</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f8f9fa; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px; }
+        .form-control { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn-primary { background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; transition: background-color 0.3s; }
+        .btn-primary:hover { background-color: #1e7e34; }
+        .test-details, .question-block { margin-bottom: 30px; padding: 15px; border: 1px solid #e9ecef; border-radius: 4px; background-color: #ffffff; }
+        .question-block { border-left: 5px solid #ffc107; }
+        .choice-group { display: flex; align-items: center; margin-bottom: 5px; background-color: #f1f1f1; padding: 8px; border-radius: 4px; }
+        .choice-group input[type="radio"] { margin-right: 10px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .errorlist { color: red; list-style: none; padding: 0; margin-top: -10px; margin-bottom: 10px; }
+        .helptext { color: #6c757d; font-size: 0.9em; }
+        .formset-add-btn { background-color: #17a2b8; }
+        .formset-add-btn:hover { background-color: #117a8b; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Create New Assessment Test</h1>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li style="color: {% if message.tags == 'error' %}red{% else %}green{% endif %};">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Test Details -->
+        <div class="test-details">
+            <h2>Test Information</h2>
+            {% for field in test_form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                    {{ field }}
+                    {{ field.errors }}
+                    {% if field.help_text %}<small class="helptext">{{ field.help_text }}</small>{% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Questions Formset -->
+        <div id="question-form-container">
+            <h2>Test Questions (MCQ)</h2>
+            
+            {{ question_formset.management_form }}
+            
+            {% for form in question_formset %}
+                <div class="question-block">
+                    {% if form.instance.pk %}<p>Existing Question: {{ form.DELETE }} Delete?</p>{% endif %}
+                    
+                    {{ form.non_field_errors }}
+
+                    <div class="form-group">
+                        <label>Question Text:</label>
+                        {{ form.text }}
+                        {{ form.text.errors }}
+                    </div>
+                    <div class="form-group" style="width: 20%; display: inline-block;">
+                        <label>Points:</label>
+                        {{ form.points }}
+                        {{ form.points.errors }}
+                    </div>
+                    
+                    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+                    <p style="font-weight: bold; margin-top: 15px;">Answer Choices (Select the correct one):</p>
+                    
+                    <div class="choice-container">
+                        {% for i in "1234" %}
+                            <div class="choice-group">
+                                <input type="radio" name="{{ form.prefix }}-correct_choice" id="{{ form.prefix }}-correct_choice_{{ i }}" value="{{ i }}">
+                                <input type="text" name="{{ form.prefix }}-choice_{{ i }}" class="form-control" placeholder="Choice {{ i }}" style="margin: 0 0 0 10px;">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                </div>
+            {% endfor %}
+        </div>
+        
+        <button type="button" class="btn-primary formset-add-btn" id="add-question-btn">Add Another Question</button>
+        <button type="submit" class="btn-primary" style="margin-left: 20px;">Save Test</button>
+    </form>
+</div>
+
+<!-- Simple Template for adding new forms (must be hidden) -->
+<div id="empty-form" style="display:none;">
+    {% include 'assessment/question_form_template.html' with form=question_formset.empty_form prefix=question_formset.empty_form.prefix %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addQuestionBtn = document.getElementById('add-question-btn');
+        const formContainer = document.getElementById('question-form-container');
+        const totalForms = document.querySelector('#id_questions-TOTAL_FORMS');
+        const emptyFormTemplate = document.getElementById('empty-form').innerHTML;
+
+        addQuestionBtn.addEventListener('click', function() {
+            const currentTotal = parseInt(totalForms.value);
+            const newIndex = currentTotal;
+
+            // 1. Get the raw HTML of the empty form template, replacing '__prefix__'
+            let newFormHtml = emptyFormTemplate.replace(new RegExp('__prefix__', 'g'), newIndex);
+            
+            // 2. Wrap it and append the new form
+            const newForm = document.createElement('div');
+            newForm.innerHTML = newFormHtml.trim();
+            formContainer.appendChild(newForm.firstChild);
+
+            // 3. Increment the total forms count
+            totalForms.value = currentTotal + 1;
+        });
+    });
+</script>
+
+</body>
+</html>

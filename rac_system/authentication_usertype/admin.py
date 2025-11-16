@@ -18,7 +18,4 @@ class CompanyProfileAdmin(admin.ModelAdmin):
     list_display = ('company_name', 'gstin', 'user')
     search_fields = ('company_name', 'gstin')
 
-@admin.register(ExpertAssignment)
-class ExpertAssignmentAdmin(admin.ModelAdmin):
-    list_display = ('expert', 'company', 'job_posting', 'created_at')
-    search_fields = ('expert__user__email', 'job_posting')
+admin.register(ExpertAssignment)

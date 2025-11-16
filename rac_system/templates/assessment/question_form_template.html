@@ -1,0 +1,29 @@
+{% load static %}
+<div class="question-block">
+    
+    {{ form.non_field_errors }}
+
+    <div class="form-group">
+        <label>Question Text:</label>
+        {{ form.text }}
+        {{ form.text.errors }}
+    </div>
+    <div class="form-group" style="width: 20%; display: inline-block;">
+        <label>Points:</label>
+        {{ form.points }}
+        {{ form.points.errors }}
+    </div>
+    
+    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+    <p style="font-weight: bold; margin-top: 15px;">Answer Choices (Select the correct one):</p>
+    
+    <div class="choice-container">
+        {% for i in "1234" %}
+            <div class="choice-group">
+                <input type="radio" name="{{ prefix }}-correct_choice" id="{{ prefix }}-correct_choice_{{ i }}" value="{{ i }}">
+                <input type="text" name="{{ prefix }}-choice_{{ i }}" class="form-control" placeholder="Choice {{ i }}" style="margin: 0 0 0 10px;">
+            </div>
+        {% endfor %}
+    </div>
+</div>

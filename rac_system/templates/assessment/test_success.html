@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Created</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f8f9fa; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        h1 { color: #28a745; margin-bottom: 20px; }
+        p { font-size: 1.1em; color: #343a40; }
+        .details-box { background-color: #e9ecef; padding: 15px; border-radius: 4px; margin-top: 20px; text-align: left; }
+        .details-box p { margin: 5px 0; }
+        .back-link { display: inline-block; margin-top: 20px; color: #007bff; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Successfully Created!</h1>
+        <p>The new assessment test has been saved and is ready to be assigned to candidates.</p>
+
+        <div class="details-box">
+            <p><strong>Test Title:</strong> {{ test.title }}</p>
+            <p><strong>Job Post:</strong> {{ test.job_post.title|default:"N/A" }}</p>
+            <p><strong>Total Questions:</strong> {{ test.questions.count }}</p>
+            <p><strong>Description:</strong> {{ test.description|default:"None" }}</p>
+        </div>
+
+        <a href="{% url 'create_test' %}" class="back-link">← Create Another Test</a>
+        <a href="{% url 'job_postings:company_dashboard' %}" >Dashboard</a>
+        
+        
+    </div>
+</body>
+</html>

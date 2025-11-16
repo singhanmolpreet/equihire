@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Test: {{ test.title }}</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #e9eef7; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        h1 { color: #004d99; border-bottom: 3px solid #004d99; padding-bottom: 15px; margin-bottom: 25px; }
+        .question-card { background-color: #f7f9fc; padding: 20px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ddd; }
+        .question-text { font-weight: bold; margin-bottom: 15px; color: #1a1a1a; font-size: 1.1em; }
+        .choice-group { display: flex; align-items: center; margin-bottom: 10px; padding: 10px; border-radius: 6px; transition: background-color 0.3s; cursor: pointer; border: 1px solid #eee; }
+        .choice-group:hover { background-color: #e0f0ff; }
+        .choice-group input[type="radio"] { margin-right: 15px; transform: scale(1.2); }
+        .submit-btn { 
+            background-color: #00cc66; color: white; padding: 12px 30px; 
+            border: none; border-radius: 8px; cursor: pointer; font-size: 1.2em; 
+            margin-top: 30px; width: 100%; transition: background-color 0.3s;
+            box-shadow: 0 4px #00a352;
+        }
+        .submit-btn:hover { background-color: #00a352; }
+        .info-bar { background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #ffeeba; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Assessment: {{ test.title }}</h1>
+    <div class="info-bar">
+        Job Post: <strong>{{ test.job_post.title|default:"(N/A)" }}</strong>.
+        Total Questions: {{ total_questions }}. 
+    </div>
+    
+    <p>{{ test.description }}</p>
+
+    <form method="post" action="{% url 'take_test' test_id=test.id %}">
+        {% csrf_token %}
+
+        {% for q in questions %}
+            <div class="question-card" id="question-{{ forloop.counter }}">
+                <p class="question-text">
+                    {{ forloop.counter }}. ({{ q.points }} points) {{ q.text }}
+                </p>
+                
+                {% for choice in q.choices.all %}
+                    <label class="choice-group">
+                        <input type="radio" 
+                               name="question_{{ q.id }}" 
+                               value="{{ choice.id }}" 
+                               required 
+                               id="choice_{{ choice.id }}">
+                        <span>{{ choice.text }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="submit-btn" onclick="return confirm('Are you sure you want to submit your answers? You cannot change them after submission.');">
+            Submit Test and View Results
+        </button>
+    </form>
+</div>
+
+</body>
+</html>
