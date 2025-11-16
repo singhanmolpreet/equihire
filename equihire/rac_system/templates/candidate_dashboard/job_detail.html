@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+<center>
+    <h2>Job Details</h2>
+</center>
+    <div class="job-detail-card">
+        <div class="job-detail-body">
+            <h5 class="job-title">{{ job_posting.title }}</h5>
+            <h6 class="company-name">{{ job_posting.company.company_name }}</h6>
+            <p><strong class="detail-label">Description:</strong> {{ job_posting.description }}</p>
+            <p><strong class="detail-label">Minimum Salary:</strong> {{ job_posting.min_salary }}</p>
+            <p><strong class="detail-label">Requirements:</strong> {{ job_posting.required_skills }}</p>
+            <p><strong class="detail-label">Minimum Experience (years):</strong> {{ job_posting.minimum_experience }}</p>
+            <p><strong class="detail-label">Posted At:</strong> {{ job_posting.created_at }}</p>
+            <div class="action-buttons">
+                <a href="{% url 'candidate_dashboard:apply_for_job' job_posting_id=job_posting.id %}" class="apply-button">Apply for Job</a>
+                <a href="{% url 'candidate_dashboard:job_listings' %}" class="back-button">Back to Listings</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .job-detail-card {
+            background-color: #181818;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+            margin: 20px auto;
+            border: 1px solid #333;
+            max-width: 700px;
+            color: #dcdcdc;
+        }
+
+        .job-detail-body {
+            padding: 20px;
+        }
+
+        .job-title {
+            color:#007BFF;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .company-name {
+            color: #aaa;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #eee;
+            margin-right: 5px;
+        }
+
+        .action-buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-start;
+        }
+
+        .apply-button, .back-button {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .apply-button {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .apply-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .back-button {
+            background-color: #555;
+            color: white;
+        }
+
+        .back-button:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+        }
+    </style>
+{% endblock %}

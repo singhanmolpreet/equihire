@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Apply for Job</h2>
+    <p>You are applying for the position: <strong>{{ job_posting.title }}</strong> at <strong>{{ job_posting.company.company_name }}</strong>.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}  {#  If you have a form, otherwise, remove this line #}
+        <button type="submit" class="btn btn-primary">Confirm Application</button>
+        <a href="{% url 'candidate_dashboard:job_detail' job_posting_id=job_posting.id %}" class="btn btn-secondary">Cancel</a>
+    </form>
+    {#  Add further instructions or information as needed #}
+{% endblock %}

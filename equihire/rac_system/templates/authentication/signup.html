@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Signup Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <!-- Include Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #121212;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #e0e0e0;
+    }
+    form {
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      padding: 30px 40px;
+      width: 100%;
+      max-width: 400px;
+    }
+    form h3 {
+      font-size: 24px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #bdbdbd;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #424242;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      background-color: #2c2c2c;
+      color: #e0e0e0;
+      transition: border-color 0.3s;
+    }
+    input:focus {
+      border-color:#007BFF;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      background-color: #007BFF;
+      color: #ffffff;
+      padding: 12px 0;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color:#0056b3;
+    }
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #007BFF;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    a:hover {
+      color:#0056b3;
+    }
+    .show-password {
+      position: absolute;
+      right: 10px;
+      top: 35%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #007BFF;
+      font-size: 15px; /* Icon size */
+    }
+    .message {
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .error {
+      background-color: #f44336;
+      color: white;
+    }
+    .success {
+      background-color: #007BFF;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <form action="" method="post">
+    {% csrf_token %}
+    <h3>Signup Here</h3>
+
+    <!-- Display Messages -->
+    <div class="messages">
+      {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+
+    <label for="first_name">First Name</label>
+    <input type="text" placeholder="First Name" name="first_name" id="first_name">
+
+    <label for="last_name">Last Name</label>
+    <input type="text" placeholder="Last Name" name="last_name" id="last_name">
+
+    <label for="username">Username</label>
+    <input type="text" placeholder="Username" name="username" id="username">
+
+    <label for="email">Email</label>
+    <input type="email" placeholder="Email" name="email" id="email">
+
+    <label for="password1">Password</label>
+    <div style="position: relative;">
+      <input type="password" placeholder="Password" id="password1" name="password1">
+      <span class="show-password" onclick="togglePasswordVisibility('password1')">
+        <i class="fas fa-eye-slash"></i> <!-- Eye Icon (slashed = hidden) -->
+      </span>
+    </div>
+
+    <label for="password2">Confirm Password</label>
+    <div style="position: relative;">
+      <input type="password" placeholder="Confirm Password" id="password2" name="password2">
+      <span class="show-password" onclick="togglePasswordVisibility('password2')">
+        <i class="fas fa-eye-slash"></i> <!-- Eye Icon (slashed = hidden) -->
+      </span>
+    </div>
+
+    <button type="submit">Signup</button>
+
+    <a href="{% url 'login' %}">I already have an account</a>
+  </form>
+
+  <script>
+    function togglePasswordVisibility(id) {
+      const passwordField = document.getElementById(id);
+      const icon = document.querySelector(`#${id} ~ .show-password i`);
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");  // Reveal icon when password is visible
+      } else {
+        passwordField.type = "password";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");  // Slashed icon when password is hidden
+      }
+    }
+  </script>
+</body>
+</html>

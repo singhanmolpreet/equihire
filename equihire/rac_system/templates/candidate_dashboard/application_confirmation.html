@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Application Confirmation</h2>
+    <div class="alert alert-success" role="alert">
+        Your application for the position of <strong>{{ job_posting.title }}</strong> at <strong>{{ job_posting.company.company_name }}</strong> has been submitted successfully.
+    </div>
+    <p>
+        Thank you for your interest. We will review your application and contact you if you are selected for an interview.
+    </p>
+    <a href="{% url 'candidate_dashboard:dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+{% endblock %}
