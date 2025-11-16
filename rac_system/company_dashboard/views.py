@@ -125,13 +125,13 @@ def delete_job_posting(request, job_posting_id):
         return redirect('job_postings:company_dashboard')
     # Add a template to confirm deletion
     return render(request, 'job_postings/delete_job_posting_confirm.html', {'job_posting': job_posting})
-
 @login_required
 @user_passes_test(is_company_user, login_url='home')
 def assign_expert_by_email(request, job_posting_id):
     """
     View to assign an expert by sending them a unique tokenized invitation email.
     """
+    # Ensure the job posting belongs to the current company user
     job_posting = get_object_or_404(JobPosting, id=job_posting_id, company=request.user)
 
     if request.method == 'POST':
@@ -147,7 +147,7 @@ def assign_expert_by_email(request, job_posting_id):
         
         # 2. Create the ExpertAssignment record
         try:
-            # Check if an assignment already exists for this email/job
+            # Check if an assignment already exists for this email/job and update it if so
             assignment, created = ExpertAssignment.objects.update_or_create(
                 job_posting=job_posting,
                 expert_email=expert_email,
@@ -163,14 +163,14 @@ def assign_expert_by_email(request, job_posting_id):
             return redirect('job_postings:company_dashboard')
             
         # 3. Create the invitation URL
-        # NOTE: You MUST define 'expert_signup' in your global or authentication app urls.py 
         invite_link = request.build_absolute_uri(
             reverse('expert_signup', kwargs={'token': token})
         )
         
         # 4. Prepare and send email
         try:
-            company_name = request.user.companyprofile.company_name # Assuming this path is correct
+            # Safely attempt to get company name
+            company_name = request.user.companyprofile.company_name
         except:
             company_name = request.user.email
 

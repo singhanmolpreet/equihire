@@ -77,7 +77,7 @@ class ExpertAssignment(models.Model):
     """
     # Links to the job posting being reviewed
     job_posting = models.ForeignKey(
-        'company_dashboard.JobPosting',  # Replace with the actual app.Model name path
+        'company_dashboard.JobPosting',  
         on_delete=models.CASCADE,
         related_name='expert_assignments',
         verbose_name="Job Posting"
