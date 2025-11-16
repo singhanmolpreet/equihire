@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Maestro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0e0e0e;
+            color: #dcdcdc;
+            line-height: 1.6;
+            display: flex; /* Use flexbox for layout */
+            flex-direction: column; /* Stack children vertically */
+            min-height: 100vh; /* Ensure body takes at least full viewport height */
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #181818;
+            color: #4CAF50;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+            width: 100%; /* Ensure nav takes full width */
+        }
+        nav h1 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            align-items: center; /* Align items vertically */
+            gap: 25px;
+        }
+        nav ul li a, nav ul li button { /* Style button like links */
+            color: #dcdcdc;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease-in-out;
+            background: none; /* Remove default button background */
+            border: none; /* Remove default button border */
+            padding: 0; /* Remove default button padding */
+            cursor: pointer; /* Add pointer cursor */
+            font-family: inherit; /* Inherit font */
+        }
+        nav ul li a:hover, nav ul li button:hover {
+            color: #4CAF50;
+        }
+        nav ul li form { /* Ensure form doesn't add extra margin/padding */
+            margin: 0;
+            padding: 0;
+            display: inline; /* Keep form inline if needed */
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(135deg, #1f1f1f, #121212);
+            color: #dcdcdc;
+            position: relative;
+            overflow: hidden;
+            flex-grow: 1; /* Allow hero to take available space if needed */
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* Consider a local or more relevant background image */
+            /* background: url('path/to/your/image.jpg') no-repeat center center/cover; */
+            background: #151515; /* Fallback color */
+            opacity: 0.1;
+            z-index: -1;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        .hero button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+        }
+        .hero button:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 60px 20px;
+            background-color: #0e0e0e;
+        }
+        .feature-card {
+            background-color: #181818;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+        }
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .feature-card p {
+            font-size: 1rem;
+            color: #dcdcdc;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #181818;
+            color: #dcdcdc;
+            text-align: center;
+            padding: 20px;
+            /* margin-top: 20px; Removed, flexbox handles spacing */
+            font-size: 0.9rem;
+            width: 100%; /* Ensure footer takes full width */
+        }
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <h1><a href="{% url 'home' %}" style="color: inherit; text-decoration: none;">EquiHire</a></h1> {# Make title a link to home #}
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+
+            {% if user.is_authenticated %}
+                {# User is logged in #}
+                {% if user.role == 'COMPANY' %}
+                    <li><a href="{% url 'job_postings:company_dashboard' %}">Dashboard</a></li> {# Example company link #}
+                {% elif user.role == 'CANDIDATE' %}
+                    {# Add candidate specific links if needed #}
+                    <li><a href="{% url 'candidate_dashboard:dashboard' %}">Dashboard</a></li> 
+                    <li><a href="{% url 'candidate_dashboard:job_listings' %}">Jobs</a></li> 
+                {% endif %}
+                <li>
+                    <form id="logout-form" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                </li>
+            {% else %}
+                {# User is NOT logged in #}
+                <li><a href="{% url 'login' %}">Login</a></li> {# Use url tag #}
+                <li><a href="{% url 'signup' %}">Sign Up</a></li> {# Use url tag #}
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Empowering Connections</h1>
+        <p>Seamlessly Bridging Employers and Employees</p>
+        {# Updated button to use url tag #}
+        <button>Get Started</button>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="feature-card">
+            <h3>AI-Powered CV Analysis</h3>
+            <p>Streamline recruitment with intelligent resume processing.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Automated Interviews</h3>
+            <p>Effortlessly manage interviews with smart scheduling.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Custom Job Forms</h3>
+            <p>Create tailored job openings and opportunities with ease.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; {% now "Y" %} EquiHire. All rights reserved.</p> {# Dynamic year #}
+        <p><a href="#">Contact Us</a> | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
+</body>
+</html>
